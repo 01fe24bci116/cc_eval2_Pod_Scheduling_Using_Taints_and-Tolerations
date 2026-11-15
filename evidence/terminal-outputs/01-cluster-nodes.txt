@@ -1,0 +1,13 @@
+﻿=== KIND CLUSTER NODES (lab-eval12) ===
+Kubernetes control plane is running at https://127.0.0.1:64027
+CoreDNS is running at https://127.0.0.1:64027/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+
+=== NODES ===
+NAME                       STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                             CONTAINER-RUNTIME
+lab-eval12-control-plane   Ready    control-plane   24s   v1.37.0   172.20.0.4    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+lab-eval12-worker          Ready    <none>          12s   v1.37.0   172.20.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+lab-eval12-worker2         Ready    <none>          12s   v1.37.0   172.20.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+

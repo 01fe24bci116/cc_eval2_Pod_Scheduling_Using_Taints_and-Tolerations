@@ -1,0 +1,245 @@
+﻿================================================================================
+KLE TECHNOLOGICAL UNIVERSITY — CLOUD COMPUTING LAB EVALUATION 2
+MASTER CLUSTER EVIDENCE CAPTURE
+Date & Time: 2026-11-15 21:33:31
+Cluster: lab-eval12
+Problem: 07 — Pod Scheduling Using Taints and Tolerations
+================================================================================
+
+--- 1. NODES TOPOLOGY & LABELS ---
+NAME                       STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                             CONTAINER-RUNTIME    LABELS
+lab-eval12-control-plane   Ready    control-plane   10m     v1.37.0   172.20.0.4    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-control-plane,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
+lab-eval12-worker          Ready    <none>          9m52s   v1.37.0   172.20.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-worker,kubernetes.io/os=linux,role=microservices
+lab-eval12-worker2         Ready    <none>          9m52s   v1.37.0   172.20.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2 (amd64)   containerd://2.3.4   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-worker2,kubernetes.io/os=linux,role=database
+
+
+--- 2. ALL PODS & NODE PLACEMENT ---
+NAMESPACE            NAME                                               READY   STATUS    RESTARTS      AGE     IP            NODE                       NOMINATED NODE   READINESS GATES
+cloudops             auth-service-767dcf7d97-z9jpk                      1/1     Running   0             2m31s   10.244.2.3    lab-eval12-worker          <none>           <none>
+cloudops             frontend-5d65f5757c-qj8h2                          1/1     Running   0             80s     10.244.2.9    lab-eval12-worker          <none>           <none>
+cloudops             frontend-5d65f5757c-rj5d4                          1/1     Running   0             2m31s   10.244.2.2    lab-eval12-worker          <none>           <none>
+cloudops             order-service-f5fdf47c7-xl7sf                      1/1     Running   0             2m31s   10.244.2.4    lab-eval12-worker          <none>           <none>
+cloudops             postgres-db-0                                      1/1     Running   0             21s     10.244.1.5    lab-eval12-worker2         <none>           <none>
+cloudops             resource-service-569656db54-rg4qr                  1/1     Running   0             2m31s   10.244.2.5    lab-eval12-worker          <none>           <none>
+kube-system          coredns-559f6c778d-bz4xl                           1/1     Running   0             9m55s   10.244.0.3    lab-eval12-control-plane   <none>           <none>
+kube-system          coredns-559f6c778d-llx2z                           1/1     Running   0             9m55s   10.244.0.2    lab-eval12-control-plane   <none>           <none>
+kube-system          etcd-lab-eval12-control-plane                      1/1     Running   0             10m     172.20.0.4    lab-eval12-control-plane   <none>           <none>
+kube-system          kindnet-5c768                                      1/1     Running   0             9m52s   172.20.0.3    lab-eval12-worker          <none>           <none>
+kube-system          kindnet-bk9z6                                      1/1     Running   0             9m55s   172.20.0.4    lab-eval12-control-plane   <none>           <none>
+kube-system          kindnet-w48x2                                      1/1     Running   0             9m52s   172.20.0.2    lab-eval12-worker2         <none>           <none>
+kube-system          kube-apiserver-lab-eval12-control-plane            1/1     Running   0             10m     172.20.0.4    lab-eval12-control-plane   <none>           <none>
+kube-system          kube-controller-manager-lab-eval12-control-plane   1/1     Running   0             10m     172.20.0.4    lab-eval12-control-plane   <none>           <none>
+kube-system          kube-proxy-5ftlc                                   1/1     Running   0             9m55s   172.20.0.4    lab-eval12-control-plane   <none>           <none>
+kube-system          kube-proxy-knzk4                                   1/1     Running   0             9m52s   172.20.0.3    lab-eval12-worker          <none>           <none>
+kube-system          kube-proxy-w8qtn                                   1/1     Running   0             9m52s   172.20.0.2    lab-eval12-worker2         <none>           <none>
+kube-system          kube-scheduler-lab-eval12-control-plane            1/1     Running   0             10m     172.20.0.4    lab-eval12-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-75f7fc7dc5-qfrqt            1/1     Running   0             9m55s   10.244.0.4    lab-eval12-control-plane   <none>           <none>
+scheduling-lab       container-restart-demo                             0/1     Error     3 (31s ago)   67s     10.244.2.10   lab-eval12-worker          <none>           <none>
+scheduling-lab       recovery-demo-84dc78bf58-9jvk2                     1/1     Running   0             29s     10.244.2.13   lab-eval12-worker          <none>           <none>
+scheduling-lab       recovery-demo-84dc78bf58-j7mm5                     1/1     Running   0             29s     10.244.2.14   lab-eval12-worker          <none>           <none>
+scheduling-lab       tolerated-test-pod                                 1/1     Running   0             7m20s   10.244.1.4    lab-eval12-worker2         <none>           <none>
+scheduling-lab       untolerated-test-pod                               0/1     Pending   0             7m27s   <none>        <none>                     <none>           <none>
+
+
+--- 3. PERSISTENT STORAGE CLAIMS ---
+NAMESPACE   NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE     VOLUMEMODE
+cloudops    postgres-data-postgres-db-0   Bound    pvc-9e27f4af-c62b-48cf-9597-e83001c48845   1Gi        RWO            standard       <unset>                 8m43s   Filesystem
+
+
+--- 4. KUBERNETES SYSTEM & SCHEDULER EVENTS ---
+NAMESPACE            LAST SEEN   TYPE      REASON                    OBJECT                                                           MESSAGE
+default              10m         Normal    NodeAllocatableEnforced   node/lab-eval12-control-plane                                    Updated Node Allocatable limit across pods
+kube-system          10m         Normal    LeaderElection            lease/kube-controller-manager                                    lab-eval12-control-plane_e8a06186-372f-4ed4-8a2c-2a0a6638f992 became leader
+default              10m         Normal    Starting                  node/lab-eval12-control-plane                                    Starting kubelet.
+default              10m         Normal    NodeHasSufficientMemory   node/lab-eval12-control-plane                                    Node lab-eval12-control-plane status is now: NodeHasSufficientMemory
+default              10m         Normal    NodeHasNoDiskPressure     node/lab-eval12-control-plane                                    Node lab-eval12-control-plane status is now: NodeHasNoDiskPressure
+default              10m         Normal    NodeHasSufficientPID      node/lab-eval12-control-plane                                    Node lab-eval12-control-plane status is now: NodeHasSufficientPID
+kube-system          10m         Warning   Unhealthy                 pod/kube-scheduler-lab-eval12-control-plane                      Readiness probe failed: HTTP probe failed with statuscode: 500
+kube-system          10m         Normal    LeaderElection            lease/kube-scheduler                                             lab-eval12-control-plane_37c96e67-b573-4e8f-a2b9-309d351b8d1e became leader
+kube-system          9m57s       Warning   NodeNotReady              pod/kube-apiserver-lab-eval12-control-plane                      Node is not ready
+default              9m57s       Normal    RegisteredNode            node/lab-eval12-control-plane                                    Node lab-eval12-control-plane event: Registered Node lab-eval12-control-plane in Controller
+kube-system          9m56s       Normal    Pulled                    pod/kube-proxy-5ftlc                                             Container image "registry.k8s.io/kube-proxy:v1.37.0" already present on machine and can be accessed by the pod
+kube-system          9m56s       Normal    Scheduled                 pod/kube-proxy-5ftlc                                             Successfully assigned kube-system/kube-proxy-5ftlc to lab-eval12-control-plane
+kube-system          9m56s       Normal    Created                   pod/kindnet-bk9z6                                                Container created
+kube-system          9m56s       Normal    SuccessfulCreate          daemonset/kube-proxy                                             Created pod: kube-proxy-5ftlc
+kube-system          9m56s       Warning   FailedScheduling          pod/coredns-559f6c778d-bz4xl                                     0/1 nodes are available: 1 node(s) had untolerated taint(s). preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system          9m56s       Warning   FailedScheduling          pod/coredns-559f6c778d-llx2z                                     0/1 nodes are available: 1 node(s) had untolerated taint(s). preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system          9m56s       Normal    SuccessfulCreate          replicaset/coredns-559f6c778d                                    Created pod: coredns-559f6c778d-bz4xl
+kube-system          9m56s       Normal    Started                   pod/kube-proxy-5ftlc                                             Container started
+kube-system          9m56s       Normal    Started                   pod/kindnet-bk9z6                                                Container started
+kube-system          9m56s       Normal    Created                   pod/kube-proxy-5ftlc                                             Container created
+local-path-storage   9m56s       Normal    SuccessfulCreate          replicaset/local-path-provisioner-75f7fc7dc5                     Created pod: local-path-provisioner-75f7fc7dc5-qfrqt
+local-path-storage   9m56s       Normal    ScalingReplicaSet         deployment/local-path-provisioner                                Scaled up replica set local-path-provisioner-75f7fc7dc5 from 0 to 1
+local-path-storage   9m56s       Warning   FailedScheduling          pod/local-path-provisioner-75f7fc7dc5-qfrqt                      0/1 nodes are available: 1 node(s) had untolerated taint(s). preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
+kube-system          9m56s       Normal    SuccessfulCreate          replicaset/coredns-559f6c778d                                    Created pod: coredns-559f6c778d-llx2z
+kube-system          9m56s       Normal    ScalingReplicaSet         deployment/coredns                                               Scaled up replica set coredns-559f6c778d from 0 to 2
+kube-system          9m56s       Normal    SuccessfulCreate          daemonset/kindnet                                                Created pod: kindnet-bk9z6
+kube-system          9m56s       Normal    Scheduled                 pod/kindnet-bk9z6                                                Successfully assigned kube-system/kindnet-bk9z6 to lab-eval12-control-plane
+kube-system          9m56s       Normal    Pulled                    pod/kindnet-bk9z6                                                Container image "docker.io/kindest/kindnetd:v20260820-69b56db7" already present on machine and can be accessed by the pod
+default              9m54s       Normal    Starting                  node/lab-eval12-control-plane                                    
+default              9m53s       Normal    NodeHasSufficientPID      node/lab-eval12-worker2                                          Node lab-eval12-worker2 status is now: NodeHasSufficientPID
+default              9m53s       Normal    NodeHasNoDiskPressure     node/lab-eval12-worker                                           Node lab-eval12-worker status is now: NodeHasNoDiskPressure
+kube-system          9m53s       Normal    SuccessfulCreate          daemonset/kube-proxy                                             Created pod: kube-proxy-knzk4
+kube-system          9m53s       Normal    SuccessfulCreate          daemonset/kube-proxy                                             Created pod: kube-proxy-w8qtn
+kube-system          9m53s       Normal    Scheduled                 pod/kube-proxy-w8qtn                                             Successfully assigned kube-system/kube-proxy-w8qtn to lab-eval12-worker2
+default              9m53s       Normal    Starting                  node/lab-eval12-worker                                           Starting kubelet.
+default              9m53s       Normal    NodeHasSufficientMemory   node/lab-eval12-worker                                           Node lab-eval12-worker status is now: NodeHasSufficientMemory
+kube-system          9m53s       Normal    Scheduled                 pod/kindnet-w48x2                                                Successfully assigned kube-system/kindnet-w48x2 to lab-eval12-worker2
+kube-system          9m53s       Normal    Scheduled                 pod/kindnet-5c768                                                Successfully assigned kube-system/kindnet-5c768 to lab-eval12-worker
+kube-system          9m53s       Normal    SuccessfulCreate          daemonset/kindnet                                                Created pod: kindnet-w48x2
+kube-system          9m53s       Normal    SuccessfulCreate          daemonset/kindnet                                                Created pod: kindnet-5c768
+kube-system          9m53s       Normal    Scheduled                 pod/kube-proxy-knzk4                                             Successfully assigned kube-system/kube-proxy-knzk4 to lab-eval12-worker
+default              9m53s       Normal    NodeHasSufficientPID      node/lab-eval12-worker                                           Node lab-eval12-worker status is now: NodeHasSufficientPID
+default              9m53s       Normal    NodeAllocatableEnforced   node/lab-eval12-worker                                           Updated Node Allocatable limit across pods
+default              9m53s       Normal    Starting                  node/lab-eval12-worker2                                          Starting kubelet.
+default              9m53s       Normal    NodeHasSufficientMemory   node/lab-eval12-worker2                                          Node lab-eval12-worker2 status is now: NodeHasSufficientMemory
+default              9m53s       Normal    NodeAllocatableEnforced   node/lab-eval12-worker2                                          Updated Node Allocatable limit across pods
+default              9m53s       Normal    NodeHasNoDiskPressure     node/lab-eval12-worker2                                          Node lab-eval12-worker2 status is now: NodeHasNoDiskPressure
+kube-system          9m52s       Normal    Created                   pod/kube-proxy-w8qtn                                             Container created
+kube-system          9m52s       Normal    Pulled                    pod/kindnet-5c768                                                Container image "docker.io/kindest/kindnetd:v20260820-69b56db7" already present on machine and can be accessed by the pod
+kube-system          9m52s       Normal    Pulled                    pod/kindnet-w48x2                                                Container image "docker.io/kindest/kindnetd:v20260820-69b56db7" already present on machine and can be accessed by the pod
+kube-system          9m52s       Normal    Pulled                    pod/kube-proxy-w8qtn                                             Container image "registry.k8s.io/kube-proxy:v1.37.0" already present on machine and can be accessed by the pod
+default              9m52s       Normal    RegisteredNode            node/lab-eval12-worker                                           Node lab-eval12-worker event: Registered Node lab-eval12-worker in Controller
+kube-system          9m52s       Normal    Created                   pod/kube-proxy-knzk4                                             Container created
+default              9m52s       Normal    RegisteredNode            node/lab-eval12-worker2                                          Node lab-eval12-worker2 event: Registered Node lab-eval12-worker2 in Controller
+kube-system          9m52s       Normal    Pulled                    pod/kube-proxy-knzk4                                             Container image "registry.k8s.io/kube-proxy:v1.37.0" already present on machine and can be accessed by the pod
+kube-system          9m51s       Normal    Started                   pod/kindnet-5c768                                                Container started
+kube-system          9m51s       Normal    Created                   pod/kindnet-5c768                                                Container created
+kube-system          9m51s       Normal    Started                   pod/kindnet-w48x2                                                Container started
+default              9m50s       Normal    Starting                  node/lab-eval12-worker                                           
+kube-system          9m51s       Normal    Started                   pod/kube-proxy-knzk4                                             Container started
+kube-system          9m51s       Normal    Started                   pod/kube-proxy-w8qtn                                             Container started
+kube-system          9m51s       Normal    Created                   pod/kindnet-w48x2                                                Container created
+default              9m50s       Normal    Starting                  node/lab-eval12-worker2                                          
+kube-system          9m45s       Normal    Scheduled                 pod/coredns-559f6c778d-bz4xl                                     Successfully assigned kube-system/coredns-559f6c778d-bz4xl to lab-eval12-control-plane
+kube-system          9m45s       Normal    Pulled                    pod/coredns-559f6c778d-bz4xl                                     Container image "registry.k8s.io/coredns/coredns:v1.14.6" already present on machine and can be accessed by the pod
+default              9m45s       Normal    NodeReady                 node/lab-eval12-control-plane                                    Node lab-eval12-control-plane status is now: NodeReady
+kube-system          9m45s       Normal    Scheduled                 pod/coredns-559f6c778d-llx2z                                     Successfully assigned kube-system/coredns-559f6c778d-llx2z to lab-eval12-control-plane
+kube-system          9m45s       Normal    Pulled                    pod/coredns-559f6c778d-llx2z                                     Container image "registry.k8s.io/coredns/coredns:v1.14.6" already present on machine and can be accessed by the pod
+local-path-storage   9m45s       Normal    Scheduled                 pod/local-path-provisioner-75f7fc7dc5-qfrqt                      Successfully assigned local-path-storage/local-path-provisioner-75f7fc7dc5-qfrqt to lab-eval12-control-plane
+local-path-storage   9m45s       Normal    Pulled                    pod/local-path-provisioner-75f7fc7dc5-qfrqt                      Container image "docker.io/kindest/local-path-provisioner:v20260820-69b56db7" already present on machine and can be accessed by the pod
+kube-system          9m45s       Normal    Created                   pod/coredns-559f6c778d-llx2z                                     Container created
+kube-system          9m44s       Warning   Unhealthy                 pod/coredns-559f6c778d-bz4xl                                     Readiness probe failed: Get "http://10.244.0.3:8181/ready": dial tcp 10.244.0.3:8181: connect: connection refused
+local-path-storage   9m44s       Normal    Started                   pod/local-path-provisioner-75f7fc7dc5-qfrqt                      Container started
+kube-system          9m44s       Warning   Unhealthy                 pod/coredns-559f6c778d-llx2z                                     Readiness probe failed: Get "http://10.244.0.2:8181/ready": dial tcp 10.244.0.2:8181: connect: connection refused
+kube-system          9m44s       Normal    Started                   pod/coredns-559f6c778d-llx2z                                     Container started
+local-path-storage   9m44s       Normal    Created                   pod/local-path-provisioner-75f7fc7dc5-qfrqt                      Container created
+kube-system          9m44s       Normal    Created                   pod/coredns-559f6c778d-bz4xl                                     Container created
+kube-system          9m44s       Normal    Started                   pod/coredns-559f6c778d-bz4xl                                     Container started
+default              9m41s       Normal    NodeReady                 node/lab-eval12-worker2                                          Node lab-eval12-worker2 status is now: NodeReady
+default              9m41s       Normal    NodeReady                 node/lab-eval12-worker                                           Node lab-eval12-worker status is now: NodeReady
+local-path-storage   8m44s       Normal    Pulled                    pod/helper-pod-create-pvc-9e27f4af-c62b-48cf-9597-e83001c48845   Container image "docker.io/kindest/local-path-helper:v20260131-7181c60a" already present on machine and can be accessed by the pod
+cloudops             22s         Normal    SuccessfulCreate          statefulset/postgres-db                                          Create Pod postgres-db-0 in StatefulSet postgres-db successful
+cloudops             8m44s       Normal    WaitForFirstConsumer      persistentvolumeclaim/postgres-data-postgres-db-0                waiting for first consumer to be created before binding
+cloudops             8m44s       Normal    SuccessfulCreate          statefulset/postgres-db                                          Create Claim postgres-data-postgres-db-0 Pod postgres-db-0 in StatefulSet postgres-db success
+cloudops             8m44s       Normal    Provisioning              persistentvolumeclaim/postgres-data-postgres-db-0                External provisioner is provisioning volume for claim "cloudops/postgres-data-postgres-db-0"
+cloudops             8m42s       Normal    ExternalProvisioning      persistentvolumeclaim/postgres-data-postgres-db-0                Waiting for a volume to be created either by the external provisioner 'rancher.io/local-path' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
+local-path-storage   8m43s       Normal    Created                   pod/helper-pod-create-pvc-9e27f4af-c62b-48cf-9597-e83001c48845   Container created
+local-path-storage   8m43s       Normal    Started                   pod/helper-pod-create-pvc-9e27f4af-c62b-48cf-9597-e83001c48845   Container started
+cloudops             8m41s       Normal    ProvisioningSucceeded     persistentvolumeclaim/postgres-data-postgres-db-0                Successfully provisioned volume pvc-9e27f4af-c62b-48cf-9597-e83001c48845
+cloudops             8m40s       Normal    Scheduled                 pod/postgres-db-0                                                Successfully assigned cloudops/postgres-db-0 to lab-eval12-worker2
+cloudops             8m40s       Normal    Pulling                   pod/postgres-db-0                                                Pulling image "postgres:15-alpine"
+cloudops             8m12s       Normal    Started                   pod/postgres-db-0                                                Container started
+cloudops             8m12s       Normal    Created                   pod/postgres-db-0                                                Container created
+cloudops             8m12s       Normal    Pulled                    pod/postgres-db-0                                                Successfully pulled image "postgres:15-alpine" in 27.874s (27.874s including waiting). Image size: 115428102 bytes.
+scheduling-lab       2m1s        Warning   FailedScheduling          pod/untolerated-test-pod                                         0/3 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint(s). preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.
+scheduling-lab       7m21s       Normal    Scheduled                 pod/tolerated-test-pod                                           Successfully assigned scheduling-lab/tolerated-test-pod to lab-eval12-worker2
+scheduling-lab       7m21s       Normal    Pulling                   pod/tolerated-test-pod                                           Pulling image "busybox:latest"
+scheduling-lab       7m14s       Normal    Pulled                    pod/tolerated-test-pod                                           Successfully pulled image "busybox:latest" in 6.374s (6.374s including waiting). Image size: 2236767 bytes.
+scheduling-lab       7m14s       Normal    Created                   pod/tolerated-test-pod                                           Container created
+scheduling-lab       7m14s       Normal    Started                   pod/tolerated-test-pod                                           Container started
+cloudops             2m32s       Normal    ScalingReplicaSet         deployment/frontend                                              Scaled up replica set frontend-5d65f5757c from 0 to 1
+cloudops             2m32s       Normal    Scheduled                 pod/resource-service-569656db54-rg4qr                            Successfully assigned cloudops/resource-service-569656db54-rg4qr to lab-eval12-worker
+cloudops             2m32s       Normal    ScalingReplicaSet         deployment/auth-service                                          Scaled up replica set auth-service-767dcf7d97 from 0 to 1
+cloudops             2m32s       Normal    ScalingReplicaSet         deployment/order-service                                         Scaled up replica set order-service-f5fdf47c7 from 0 to 1
+cloudops             2m32s       Normal    Pulling                   pod/frontend-5d65f5757c-rj5d4                                    Pulling image "nginx:alpine"
+cloudops             2m32s       Normal    SuccessfulCreate          replicaset/order-service-f5fdf47c7                               Created pod: order-service-f5fdf47c7-xl7sf
+cloudops             2m32s       Normal    Scheduled                 pod/auth-service-767dcf7d97-z9jpk                                Successfully assigned cloudops/auth-service-767dcf7d97-z9jpk to lab-eval12-worker
+cloudops             2m32s       Normal    Scheduled                 pod/order-service-f5fdf47c7-xl7sf                                Successfully assigned cloudops/order-service-f5fdf47c7-xl7sf to lab-eval12-worker
+cloudops             2m32s       Normal    SuccessfulCreate          replicaset/resource-service-569656db54                           Created pod: resource-service-569656db54-rg4qr
+cloudops             2m32s       Normal    ScalingReplicaSet         deployment/resource-service                                      Scaled up replica set resource-service-569656db54 from 0 to 1
+cloudops             2m32s       Normal    SuccessfulCreate          replicaset/frontend-5d65f5757c                                   Created pod: frontend-5d65f5757c-rj5d4
+cloudops             2m32s       Normal    Scheduled                 pod/frontend-5d65f5757c-rj5d4                                    Successfully assigned cloudops/frontend-5d65f5757c-rj5d4 to lab-eval12-worker
+cloudops             2m32s       Normal    SuccessfulCreate          replicaset/auth-service-767dcf7d97                               Created pod: auth-service-767dcf7d97-z9jpk
+cloudops             2m31s       Normal    Pulling                   pod/order-service-f5fdf47c7-xl7sf                                Pulling image "python:3.11-slim"
+cloudops             2m31s       Normal    Pulling                   pod/auth-service-767dcf7d97-z9jpk                                Pulling image "python:3.11-slim"
+cloudops             2m31s       Normal    Pulling                   pod/resource-service-569656db54-rg4qr                            Pulling image "python:3.11-slim"
+cloudops             2m20s       Normal    Started                   pod/frontend-5d65f5757c-rj5d4                                    Container started
+cloudops             2m20s       Normal    Created                   pod/frontend-5d65f5757c-rj5d4                                    Container created
+cloudops             2m20s       Normal    Pulled                    pod/frontend-5d65f5757c-rj5d4                                    Successfully pulled image "nginx:alpine" in 11.542s (11.542s including waiting). Image size: 26368486 bytes.
+cloudops             2m4s        Normal    Created                   pod/auth-service-767dcf7d97-z9jpk                                Container created
+cloudops             2m4s        Normal    Started                   pod/auth-service-767dcf7d97-z9jpk                                Container started
+cloudops             2m4s        Normal    Pulled                    pod/auth-service-767dcf7d97-z9jpk                                Successfully pulled image "python:3.11-slim" in 16.114s (27.285s including waiting). Image size: 45620901 bytes.
+cloudops             2m2s        Normal    Pulled                    pod/order-service-f5fdf47c7-xl7sf                                Successfully pulled image "python:3.11-slim" in 2.069s (29.233s including waiting). Image size: 45620901 bytes.
+cloudops             2m2s        Normal    Started                   pod/order-service-f5fdf47c7-xl7sf                                Container started
+cloudops             2m2s        Normal    Created                   pod/order-service-f5fdf47c7-xl7sf                                Container created
+cloudops             2m          Normal    Pulled                    pod/resource-service-569656db54-rg4qr                            Successfully pulled image "python:3.11-slim" in 1.68s (30.767s including waiting). Image size: 45620901 bytes.
+cloudops             2m          Normal    Started                   pod/resource-service-569656db54-rg4qr                            Container started
+cloudops             2m          Normal    Created                   pod/resource-service-569656db54-rg4qr                            Container created
+cloudops             97s         Normal    ScalingReplicaSet         deployment/frontend                                              Scaled up replica set frontend-5d65f5757c from 1 to 3
+cloudops             97s         Normal    Scheduled                 pod/frontend-5d65f5757c-j8fjv                                    Successfully assigned cloudops/frontend-5d65f5757c-j8fjv to lab-eval12-worker
+cloudops             97s         Normal    SuccessfulCreate          replicaset/frontend-5d65f5757c                                   Created pod: frontend-5d65f5757c-5wg7j
+cloudops             97s         Normal    Scheduled                 pod/frontend-5d65f5757c-5wg7j                                    Successfully assigned cloudops/frontend-5d65f5757c-5wg7j to lab-eval12-worker
+cloudops             97s         Normal    SuccessfulCreate          replicaset/frontend-5d65f5757c                                   Created pod: frontend-5d65f5757c-j8fjv
+cloudops             96s         Normal    Pulled                    pod/frontend-5d65f5757c-5wg7j                                    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+cloudops             96s         Normal    Created                   pod/frontend-5d65f5757c-5wg7j                                    Container created
+cloudops             95s         Normal    Started                   pod/frontend-5d65f5757c-5wg7j                                    Container started
+cloudops             95s         Normal    Pulled                    pod/frontend-5d65f5757c-j8fjv                                    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+cloudops             95s         Normal    Created                   pod/frontend-5d65f5757c-j8fjv                                    Container created
+cloudops             95s         Normal    Started                   pod/frontend-5d65f5757c-j8fjv                                    Container started
+cloudops             95s         Normal    ScalingReplicaSet         deployment/frontend                                              Scaled down replica set frontend-5d65f5757c from 3 to 1
+cloudops             95s         Normal    SuccessfulDelete          replicaset/frontend-5d65f5757c                                   Deleted pod: frontend-5d65f5757c-j8fjv
+cloudops             95s         Normal    SuccessfulDelete          replicaset/frontend-5d65f5757c                                   Deleted pod: frontend-5d65f5757c-5wg7j
+cloudops             93s         Normal    Killing                   pod/frontend-5d65f5757c-5wg7j                                    Stopping container web
+cloudops             93s         Normal    Killing                   pod/frontend-5d65f5757c-j8fjv                                    Stopping container web
+cloudops             83s         Normal    Scheduled                 pod/frontend-5d65f5757c-qh4h7                                    Successfully assigned cloudops/frontend-5d65f5757c-qh4h7 to lab-eval12-worker
+cloudops             83s         Normal    ScalingReplicaSet         deployment/frontend                                              Scaled up replica set frontend-5d65f5757c from 1 to 2
+cloudops             83s         Normal    SuccessfulCreate          replicaset/frontend-5d65f5757c                                   Created pod: frontend-5d65f5757c-qh4h7
+cloudops             82s         Normal    Created                   pod/frontend-5d65f5757c-qh4h7                                    Container created
+cloudops             82s         Normal    Started                   pod/frontend-5d65f5757c-qh4h7                                    Container started
+cloudops             82s         Normal    Pulled                    pod/frontend-5d65f5757c-qh4h7                                    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+cloudops             81s         Normal    SuccessfulCreate          replicaset/frontend-5d65f5757c                                   Created pod: frontend-5d65f5757c-qj8h2
+cloudops             81s         Normal    Killing                   pod/frontend-5d65f5757c-qh4h7                                    Stopping container web
+cloudops             81s         Normal    Scheduled                 pod/frontend-5d65f5757c-qj8h2                                    Successfully assigned cloudops/frontend-5d65f5757c-qj8h2 to lab-eval12-worker
+cloudops             80s         Normal    Started                   pod/frontend-5d65f5757c-qj8h2                                    Container started
+cloudops             80s         Normal    Created                   pod/frontend-5d65f5757c-qj8h2                                    Container created
+cloudops             80s         Normal    Pulled                    pod/frontend-5d65f5757c-qj8h2                                    Container image "nginx:alpine" already present on machine and can be accessed by the pod
+scheduling-lab       68s         Normal    Scheduled                 pod/container-restart-demo                                       Successfully assigned scheduling-lab/container-restart-demo to lab-eval12-worker
+scheduling-lab       11s         Normal    Pulling                   pod/container-restart-demo                                       Pulling image "busybox:latest"
+scheduling-lab       61s         Normal    Pulled                    pod/container-restart-demo                                       Successfully pulled image "busybox:latest" in 6.697s (6.697s including waiting). Image size: 2236767 bytes.
+scheduling-lab       9s          Normal    Created                   pod/container-restart-demo                                       Container created
+scheduling-lab       9s          Normal    Started                   pod/container-restart-demo                                       Container started
+scheduling-lab       55s         Normal    Pulled                    pod/container-restart-demo                                       Successfully pulled image "busybox:latest" in 1.869s (1.869s including waiting). Image size: 2236767 bytes.
+scheduling-lab       6s          Warning   BackOff                   pod/container-restart-demo                                       Back-off restarting failed container crashing-container in pod container-restart-demo_scheduling-lab(36dd9db2-78a5-451b-b555-171409c93e0a)
+scheduling-lab       35s         Normal    Pulled                    pod/container-restart-demo                                       Successfully pulled image "busybox:latest" in 1.938s (1.938s including waiting). Image size: 2236767 bytes.
+scheduling-lab       34s         Normal    Started                   pod/recovery-demo-84dc78bf58-xwhwc                               Container started
+scheduling-lab       34s         Normal    SuccessfulCreate          replicaset/recovery-demo-84dc78bf58                              Created pod: recovery-demo-84dc78bf58-t5z2z
+scheduling-lab       34s         Normal    SuccessfulCreate          replicaset/recovery-demo-84dc78bf58                              Created pod: recovery-demo-84dc78bf58-xwhwc
+scheduling-lab       34s         Normal    Started                   pod/recovery-demo-84dc78bf58-t5z2z                               Container started
+scheduling-lab       34s         Normal    ScalingReplicaSet         deployment/recovery-demo                                         Scaled up replica set recovery-demo-84dc78bf58 from 0 to 2
+scheduling-lab       34s         Normal    Created                   pod/recovery-demo-84dc78bf58-xwhwc                               Container created
+scheduling-lab       34s         Normal    Pulled                    pod/recovery-demo-84dc78bf58-xwhwc                               Container image "nginx:alpine" already present on machine and can be accessed by the pod
+scheduling-lab       34s         Normal    Scheduled                 pod/recovery-demo-84dc78bf58-xwhwc                               Successfully assigned scheduling-lab/recovery-demo-84dc78bf58-xwhwc to lab-eval12-worker
+scheduling-lab       34s         Normal    Scheduled                 pod/recovery-demo-84dc78bf58-t5z2z                               Successfully assigned scheduling-lab/recovery-demo-84dc78bf58-t5z2z to lab-eval12-worker
+scheduling-lab       34s         Normal    Pulled                    pod/recovery-demo-84dc78bf58-t5z2z                               Container image "nginx:alpine" already present on machine and can be accessed by the pod
+scheduling-lab       34s         Normal    Created                   pod/recovery-demo-84dc78bf58-t5z2z                               Container created
+scheduling-lab       33s         Normal    Killing                   pod/recovery-demo-84dc78bf58-xwhwc                               Stopping container demo-web
+scheduling-lab       33s         Normal    Killing                   pod/recovery-demo-84dc78bf58-t5z2z                               Stopping container demo-web
+scheduling-lab       30s         Normal    SuccessfulCreate          replicaset/recovery-demo-84dc78bf58                              Created pod: recovery-demo-84dc78bf58-9jvk2
+scheduling-lab       30s         Normal    ScalingReplicaSet         deployment/recovery-demo                                         Scaled up replica set recovery-demo-84dc78bf58 from 0 to 2
+scheduling-lab       30s         Normal    SuccessfulCreate          replicaset/recovery-demo-84dc78bf58                              Created pod: recovery-demo-84dc78bf58-j7mm5
+scheduling-lab       30s         Normal    Scheduled                 pod/recovery-demo-84dc78bf58-j7mm5                               Successfully assigned scheduling-lab/recovery-demo-84dc78bf58-j7mm5 to lab-eval12-worker
+scheduling-lab       30s         Normal    Scheduled                 pod/recovery-demo-84dc78bf58-9jvk2                               Successfully assigned scheduling-lab/recovery-demo-84dc78bf58-9jvk2 to lab-eval12-worker
+scheduling-lab       29s         Normal    Created                   pod/recovery-demo-84dc78bf58-9jvk2                               Container created
+scheduling-lab       29s         Normal    Pulled                    pod/recovery-demo-84dc78bf58-9jvk2                               Container image "nginx:alpine" already present on machine and can be accessed by the pod
+scheduling-lab       29s         Normal    Started                   pod/recovery-demo-84dc78bf58-j7mm5                               Container started
+scheduling-lab       29s         Normal    Created                   pod/recovery-demo-84dc78bf58-j7mm5                               Container created
+scheduling-lab       29s         Normal    Started                   pod/recovery-demo-84dc78bf58-9jvk2                               Container started
+scheduling-lab       29s         Normal    Pulled                    pod/recovery-demo-84dc78bf58-j7mm5                               Container image "nginx:alpine" already present on machine and can be accessed by the pod
+cloudops             23s         Normal    Killing                   pod/postgres-db-0                                                Stopping container postgres
+cloudops             22s         Normal    Scheduled                 pod/postgres-db-0                                                Successfully assigned cloudops/postgres-db-0 to lab-eval12-worker2
+cloudops             22s         Normal    Pulled                    pod/postgres-db-0                                                Container image "postgres:15-alpine" already present on machine and can be accessed by the pod
+cloudops             22s         Normal    Created                   pod/postgres-db-0                                                Container created
+cloudops             22s         Normal    Started                   pod/postgres-db-0                                                Container started
+scheduling-lab       10s         Normal    Pulled                    pod/container-restart-demo                                       Successfully pulled image "busybox:latest" in 1.894s (1.894s including waiting). Image size: 2236767 bytes.
+

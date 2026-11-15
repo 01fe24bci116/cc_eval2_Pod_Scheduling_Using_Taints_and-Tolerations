@@ -1,0 +1,8 @@
+# 3-Node Cluster Configuration for KLE Tech Lab Evaluation 2 - Problem 07
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: lab-eval12
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker

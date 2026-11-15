@@ -1,0 +1,485 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-html
+  namespace: cloudops
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>CloudOps Console — Kubernetes Resource Management & Scheduling Lab</title>
+      <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+      <style>
+        :root {
+          --azure-blue: #0078d4;
+          --azure-dark: #106ebe;
+          --azure-bg: #f5f5f5;
+          --azure-surface: #ffffff;
+          --azure-border: #e0e0e0;
+          --azure-text: #242424;
+          --azure-muted: #616161;
+          --azure-success: #107c41;
+          --azure-danger: #a80000;
+          --azure-warning: #d83b01;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", -apple-system, sans-serif; }
+        body { background: var(--azure-bg); color: var(--azure-text); font-size: 13px; height: 100vh; display: flex; flex-direction: column; }
+        .header { background: var(--azure-blue); color: white; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header-title { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+        .cluster-pill { background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 2px; font-size: 11px; font-weight: 400; }
+        .layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 230px; background: white; border-right: 1px solid var(--azure-border); display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar-section { padding: 12px 16px 4px 16px; font-size: 10px; text-transform: uppercase; color: var(--azure-muted); font-weight: 700; }
+        .nav-item { padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--azure-text); border-left: 3px solid transparent; }
+        .nav-item:hover { background: #f3f2f1; }
+        .nav-item.active { background: #edebe9; border-left-color: var(--azure-blue); font-weight: 600; }
+        .main { flex: 1; overflow-y: auto; padding: 16px 24px; }
+        .title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .page-title { font-size: 20px; font-weight: 600; }
+        .btn { background: white; border: 1px solid var(--azure-border); padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 2px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn:hover { background: #f3f2f1; }
+        .btn-primary { background: var(--azure-blue); color: white; border: none; }
+        .btn-primary:hover { background: var(--azure-dark); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .card { background: white; border: 1px solid var(--azure-border); padding: 16px; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card-label { font-size: 11px; color: var(--azure-muted); margin-bottom: 4px; }
+        .card-value { font-size: 24px; font-weight: 600; }
+        .card-sub { font-size: 11px; color: var(--azure-muted); margin-top: 4px; }
+        .table-box { background: white; border: 1px solid var(--azure-border); border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 20px; }
+        .table-title { padding: 12px 16px; font-weight: 600; border-bottom: 1px solid var(--azure-border); background: #faf9f8; display: flex; justify-content: space-between; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #faf9f8; border-bottom: 1px solid var(--azure-border); padding: 10px 14px; font-size: 12px; font-weight: 600; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f3f2f1; font-size: 12px; }
+        tr:hover td { background: #f8f8f8; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+        .badge-success { background: #dff6dd; color: #107c41; }
+        .badge-danger { background: #fde7e9; color: #a80000; }
+        .badge-warning { background: #fff4ce; color: #8a3b00; }
+        .badge-info { background: #deecf9; color: #0078d4; }
+        .badge-taint { background: #fed9cc; color: #8a3b00; font-family: monospace; font-weight: 600; }
+        .code-box { background: #1e1e1e; color: #d4d4d4; padding: 14px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.5; border-radius: 2px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="header-title">
+          <span>☁️ CloudOps Console</span>
+          <span style="font-weight: 400; opacity: 0.8; font-size: 13px;">| Kubernetes Resource Management</span>
+          <span class="cluster-pill">● Cluster: lab-eval12</span>
+        </div>
+        <div style="font-size: 11px; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 2px;">
+          KLE Tech · Cloud Computing Lab Evaluation 2 · Problem 07
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="sidebar">
+          <div class="sidebar-section">Evaluation Focus</div>
+          <div class="nav-item active" onclick="switchTab('lab')">🛡️ Scheduling Lab (P07)</div>
+          
+          <div class="sidebar-section">Cluster Resources</div>
+          <div class="nav-item" onclick="switchTab('overview')">📊 Overview</div>
+          <div class="nav-item" onclick="switchTab('nodes')">🖥️ Nodes & Taints</div>
+          <div class="nav-item" onclick="switchTab('pods')">📦 Compute & Pods</div>
+          <div class="nav-item" onclick="switchTab('deployments')">📈 Deployments & Scale</div>
+          <div class="nav-item" onclick="switchTab('storage')">💾 Storage & Database</div>
+          
+          <div class="sidebar-section">Application & System</div>
+          <div class="nav-item" onclick="switchTab('requests')">📝 Resource Requests</div>
+          <div class="nav-item" onclick="switchTab('settings')">⚙️ Cluster Configuration</div>
+        </div>
+
+        <div class="main">
+          <!-- TAB: SCHEDULING LAB -->
+          <div id="tab-lab">
+            <div class="title-bar">
+              <div class="page-title">Pod Scheduling Using Taints and Tolerations (Problem 07)</div>
+              <button class="btn" onclick="location.reload()">🔄 Refresh</button>
+            </div>
+
+            <div style="background: #fff4ce; border: 1px solid #fed9cc; padding: 12px 16px; border-radius: 2px; margin-bottom: 16px;">
+              <strong style="color: #8a3b00;">Evaluation Statement:</strong>
+              <div style="font-size: 12px; margin-top: 4px;">
+                "Configure taints on selected worker nodes and tolerations on application pods to control which workloads can be scheduled on those nodes.
+                Apply a taint to a worker node, deploy a pod without a matching toleration, then deploy another pod with the correct toleration and compare their scheduling outcomes."
+              </div>
+            </div>
+
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-label">Tainted Dedicated Database Node</div>
+                <div class="card-value" style="color: #d83b01; font-size: 18px;">lab-eval12-worker2</div>
+                <div class="card-sub">Taint: dedicated=database:NoSchedule</div>
+              </div>
+              <div class="card">
+                <div class="card-label">General Microservices Node</div>
+                <div class="card-value" style="color: #0078d4; font-size: 18px;">lab-eval12-worker</div>
+                <div class="card-sub">Label: role=microservices (Untainted)</div>
+              </div>
+              <div class="card">
+                <div class="card-label">Untolerated Pod Outcome</div>
+                <div class="card-value" style="color: #a80000;">Pending</div>
+                <div class="card-sub">Rejected by kube-scheduler</div>
+              </div>
+              <div class="card">
+                <div class="card-label">Tolerated Pod Outcome</div>
+                <div class="card-value" style="color: #107c41;">Running</div>
+                <div class="card-sub">Scheduled on lab-eval12-worker2</div>
+              </div>
+            </div>
+
+            <div class="table-box">
+              <div class="table-title">Live Scheduling Outcome Matrix (Evaluated by Kubernetes Scheduler)</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pod Name</th>
+                    <th>Namespace</th>
+                    <th>Has Toleration?</th>
+                    <th>Node Selector</th>
+                    <th>Assigned Node</th>
+                    <th>Status</th>
+                    <th>Outcome Explanation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600; font-family: monospace;">untolerated-test-pod</td>
+                    <td><span class="badge badge-info">scheduling-lab</span></td>
+                    <td><span class="badge badge-danger">❌ None</span></td>
+                    <td><code>{"role":"database"}</code></td>
+                    <td style="color: #a80000; font-weight: 600;">&lt;None - Blocked&gt;</td>
+                    <td><span class="badge badge-danger">Pending</span></td>
+                    <td><strong>FailedScheduling</strong>: Rejected due to untolerated taint <code>{dedicated: database}</code></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; font-family: monospace;">tolerated-test-pod</td>
+                    <td><span class="badge badge-info">scheduling-lab</span></td>
+                    <td><span class="badge badge-success">✅ dedicated=database</span></td>
+                    <td><code>{"role":"database"}</code></td>
+                    <td style="font-weight: 600;">lab-eval12-worker2</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td><strong>Success</strong>: Matching toleration allowed placement onto tainted DB node</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; font-family: monospace;">postgres-db-0</td>
+                    <td><span class="badge badge-info">cloudops</span></td>
+                    <td><span class="badge badge-success">✅ dedicated=database</span></td>
+                    <td><code>{"role":"database"}</code></td>
+                    <td style="font-weight: 600;">lab-eval12-worker2</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td><strong>Production DB</strong>: Dedicated node placement with persistent volume bound</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600; font-family: monospace;">frontend-*</td>
+                    <td><span class="badge badge-info">cloudops</span></td>
+                    <td><span class="badge badge-warning">None</span></td>
+                    <td><code>{"role":"microservices"}</code></td>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td>Scheduled onto untainted general microservices worker</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-box">
+              <div class="table-title">Actual Scheduler Terminal Event Log</div>
+              <div class="code-box">
+                <span style="color: #6a9955;">$ kubectl describe pod untolerated-test-pod -n scheduling-lab</span><br>
+                Events:<br>
+                &nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reason&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message<br>
+                &nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
+                &nbsp;&nbsp;<span style="color: #f48771;">Warning  FailedScheduling  default-scheduler  0/3 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint(s).</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: OVERVIEW -->
+          <div id="tab-overview" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Cluster Health & Topology</div>
+            </div>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-label">Cluster Nodes</div>
+                <div class="card-value">3 Nodes</div>
+                <div class="card-sub">1 Control-Plane + 2 Workers</div>
+              </div>
+              <div class="card">
+                <div class="card-label">Active Workload Pods</div>
+                <div class="card-value">6 Pods</div>
+                <div class="card-sub">Microservices + Database Tier</div>
+              </div>
+              <div class="card">
+                <div class="card-label">PostgreSQL Storage</div>
+                <div class="card-value" style="color: #107c41;">Bound (1Gi)</div>
+                <div class="card-sub">StorageClass: standard</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: NODES -->
+          <div id="tab-nodes" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Node Topology & Taints Inspector</div>
+            </div>
+            <div class="table-box">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Node Name</th>
+                    <th>Status</th>
+                    <th>Role Label</th>
+                    <th>Configured Taint</th>
+                    <th>Designated Tier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600;">lab-eval12-control-plane</td>
+                    <td><span class="badge badge-success">Ready</span></td>
+                    <td><code>node-role.kubernetes.io/control-plane</code></td>
+                    <td><span class="badge badge-taint">node-role.kubernetes.io/control-plane:NoSchedule</span></td>
+                    <td>Kubernetes Core Plane</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Ready</span></td>
+                    <td><span class="badge badge-info">role=microservices</span></td>
+                    <td><em style="color:#888;">None</em></td>
+                    <td>General Application Pods</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">lab-eval12-worker2</td>
+                    <td><span class="badge badge-success">Ready</span></td>
+                    <td><span class="badge badge-warning">role=database</span></td>
+                    <td><span class="badge badge-taint">dedicated=database:NoSchedule</span></td>
+                    <td>Dedicated Database Tier</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: PODS -->
+          <div id="tab-pods" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Compute Pod Placement</div>
+            </div>
+            <div class="table-box">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pod Name</th>
+                    <th>Namespace</th>
+                    <th>Node Placement</th>
+                    <th>Status</th>
+                    <th>Toleration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600;">postgres-db-0</td>
+                    <td>cloudops</td>
+                    <td style="font-weight: 600;">lab-eval12-worker2</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td><span class="badge badge-taint">dedicated=database:NoSchedule</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">frontend</td>
+                    <td>cloudops</td>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td>None</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">auth-service</td>
+                    <td>cloudops</td>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td>None</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">order-service</td>
+                    <td>cloudops</td>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td>None</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 600;">resource-service</td>
+                    <td>cloudops</td>
+                    <td style="font-weight: 600;">lab-eval12-worker</td>
+                    <td><span class="badge badge-success">Running</span></td>
+                    <td>None</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: DEPLOYMENTS -->
+          <div id="tab-deployments" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Workload Scaling & Reconciliation</div>
+            </div>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-label">Frontend Replicas</div>
+                <div class="card-value">1 Desired / 1 Ready</div>
+                <div class="card-sub">Scale up to 3 using: <code>scripts/08-scale-workloads.ps1</code></div>
+              </div>
+              <div class="card">
+                <div class="card-label">Self-Healing</div>
+                <div class="card-value" style="color:#107c41;">Automated</div>
+                <div class="card-sub">ReplicaSet replaces deleted pods automatically</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: STORAGE -->
+          <div id="tab-storage" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Database Storage & Data Persistence</div>
+            </div>
+            <div class="table-box">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Claim Name</th>
+                    <th>Namespace</th>
+                    <th>Status</th>
+                    <th>Volume Capacity</th>
+                    <th>Bound Worker</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 600;">postgres-data-postgres-db-0</td>
+                    <td>cloudops</td>
+                    <td><span class="badge badge-success">Bound</span></td>
+                    <td>1Gi</td>
+                    <td style="font-weight: 600;">lab-eval12-worker2</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: REQUESTS -->
+          <div id="tab-requests" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Resource Allocation Requests (PostgreSQL Backed)</div>
+            </div>
+            <div class="table-box">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Requester</th>
+                    <th>Service Name</th>
+                    <th>CPU Cores</th>
+                    <th>Memory</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#1</td>
+                    <td style="font-weight:600;">DevOps-Lead</td>
+                    <td>order-service</td>
+                    <td>500m</td>
+                    <td>512Mi</td>
+                    <td><span class="badge badge-success">Approved</span></td>
+                  </tr>
+                  <tr>
+                    <td>#2</td>
+                    <td style="font-weight:600;">QA-Team</td>
+                    <td>load-test-runner</td>
+                    <td>1000m</td>
+                    <td>1024Mi</td>
+                    <td><span class="badge badge-warning">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td>#3</td>
+                    <td style="font-weight:600;">DBA</td>
+                    <td>postgres-db-0</td>
+                    <td>250m</td>
+                    <td>256Mi</td>
+                    <td><span class="badge badge-info">Dedicated-Tolerated</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB: SETTINGS -->
+          <div id="tab-settings" style="display:none;">
+            <div class="title-bar">
+              <div class="page-title">Cluster & System Configuration</div>
+            </div>
+            <div class="table-box">
+              <div class="table-title">Kubernetes Cluster Environment Metadata</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Configuration Parameter</th>
+                    <th>Value / Setting</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight:600;">Cluster Name</td>
+                    <td><code>lab-eval12</code></td>
+                    <td><span class="badge badge-success">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Orchestrator</td>
+                    <td>Kubernetes in Docker (KIND) v0.33.0 / K8s v1.37.0</td>
+                    <td><span class="badge badge-success">Online</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Container Network Interface (CNI)</td>
+                    <td><code>kindnet</code> (Docker Bridge Network)</td>
+                    <td><span class="badge badge-success">Healthy</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Default StorageClass</td>
+                    <td><code>standard</code> (rancher.io/local-path provisioner)</td>
+                    <td><span class="badge badge-success">Default</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Evaluation Namespace</td>
+                    <td><code>cloudops</code> & <code>scheduling-lab</code></td>
+                    <td><span class="badge badge-info">Configured</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Dedicated Database Taint</td>
+                    <td><code>dedicated=database:NoSchedule</code></td>
+                    <td><span class="badge badge-taint">Enforced on Worker 2</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function switchTab(tabId) {
+          const tabs = ['lab', 'overview', 'nodes', 'pods', 'deployments', 'storage', 'requests', 'settings'];
+          tabs.forEach(t => {
+            const el = document.getElementById('tab-' + t);
+            if (el) el.style.display = (t === tabId) ? 'block' : 'none';
+          });
+          document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+          event.currentTarget.classList.add('active');
+        }
+      </script>
+    </body>
+    </html>

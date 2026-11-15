@@ -1,0 +1,66 @@
+﻿=== CONTAINER RESTART DEMO STATUS ===
+NAME                     READY   STATUS   RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+container-restart-demo   0/1     Error    0          12s   10.244.2.10   lab-eval12-worker   <none>           <none>
+
+
+=== DESCRIBE OUTPUT (RESTART EVENTS) ===
+Name:             container-restart-demo
+Namespace:        scheduling-lab
+Priority:         0
+Service Account:  default
+Node:             lab-eval12-worker/172.20.0.3
+Start Time:       Sun, 15 Nov 2026 21:32:23 +0530
+Labels:           experiment=container-restart-demo
+Annotations:      <none>
+Status:           Running
+IP:               10.244.2.10
+IPs:
+  IP:  10.244.2.10
+Containers:
+  crashing-container:
+    Container ID:  containerd://92d5f272a4acd910cc983158939d5926e72b111e371d5176711b969cb8f4ddce
+    Image:         busybox:latest
+    Image ID:      docker.io/library/busybox@sha256:a46257e06c82ad85242d0d38077d0a52d9896389ca60a1a59d3463db586e5fa4
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo 'Container started. Exiting after 3s to demonstrate Kubelet auto-restart...'; sleep 3; exit 1
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sun, 15 Nov 2026 21:32:30 +0530
+      Finished:     Sun, 15 Nov 2026 21:32:33 +0530
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lcrmg (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-lcrmg:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              role=microservices
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age               From               Message
+  ----    ------     ----              ----               -------
+  Normal  Scheduled  12s               default-scheduler  Successfully assigned scheduling-lab/container-restart-demo to lab-eval12-worker
+  Normal  Pulled     5s                kubelet            spec.containers{crashing-container}: Successfully pulled image "busybox:latest" in 6.697s (6.697s including waiting). Image size: 2236767 bytes.
+  Normal  Created    5s                kubelet            spec.containers{crashing-container}: Container created
+  Normal  Started    5s                kubelet            spec.containers{crashing-container}: Container started
+  Normal  Pulling    1s (x2 over 12s)  kubelet            spec.containers{crashing-container}: Pulling image "busybox:latest"
+

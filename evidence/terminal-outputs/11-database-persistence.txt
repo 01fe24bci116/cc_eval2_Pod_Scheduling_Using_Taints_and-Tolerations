@@ -1,0 +1,32 @@
+﻿=== BEFORE DELETION ===
+NAME            READY   STATUS    RESTARTS   AGE    IP           NODE                 NOMINATED NODE   READINESS GATES
+postgres-db-0   1/1     Running   0          132m   10.244.1.5   lab-eval12-worker2   <none>           <none>
+
+NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+postgres-data-postgres-db-0   Bound    pvc-9e27f4af-c62b-48cf-9597-e83001c48845   1Gi        RWO            standard       <unset>                 140m
+
+
+=== INSERT RECORD ===
+ id |     experiment_name      |        recorded_at         
+----+--------------------------+----------------------------
+  3 | LAB_EVAL_20261115_234517 | 2026-11-15 18:15:17.689635
+(1 row)
+
+INSERT 0 1
+
+
+=== AFTER RE-CREATION ===
+NAME            READY   STATUS    RESTARTS   AGE   IP           NODE                 NOMINATED NODE   READINESS GATES
+postgres-db-0   1/1     Running   0          6s    10.244.1.6   lab-eval12-worker2   <none>           <none>
+
+NAME                          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+postgres-data-postgres-db-0   Bound    pvc-9e27f4af-c62b-48cf-9597-e83001c48845   1Gi        RWO            standard       <unset>                 140m
+
+
+=== PERSISTENCE QUERY ===
+ id |     experiment_name      |         status         |        recorded_at         
+----+--------------------------+------------------------+----------------------------
+  3 | LAB_EVAL_20261115_234517 | COMMITTED_PRE_DELETION | 2026-11-15 18:15:17.689635
+(1 row)
+
+

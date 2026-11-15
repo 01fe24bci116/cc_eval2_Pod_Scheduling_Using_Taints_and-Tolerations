@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: untolerated-test-pod
+  namespace: scheduling-lab
+  labels:
+    experiment: negative-scheduling-test
+    eval-problem: "07"
+spec:
+  # Explicitly select the database worker node
+  nodeSelector:
+    role: database
+  # CRITICAL: Missing toleration for 'dedicated=database:NoSchedule'
+  # Scheduler MUST reject placement on lab-eval12-worker2 due to untolerated taint
+  containers:
+  - name: probe
+    image: busybox:latest
+    command: ["sh", "-c", "echo 'Negative test pod started'; sleep 3600"]
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi

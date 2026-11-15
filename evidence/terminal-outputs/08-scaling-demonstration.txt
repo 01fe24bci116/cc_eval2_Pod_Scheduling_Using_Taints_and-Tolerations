@@ -1,0 +1,18 @@
+﻿=== BASELINE (1 REPLICA) ===
+NAME                        READY   STATUS    RESTARTS   AGE    IP           NODE                NOMINATED NODE   READINESS GATES
+frontend-5d65f5757c-qj8h2   1/1     Running   0          132m   10.244.2.9   lab-eval12-worker   <none>           <none>
+frontend-5d65f5757c-rj5d4   1/1     Running   0          133m   10.244.2.2   lab-eval12-worker   <none>           <none>
+
+
+=== SCALE-UP (3 REPLICAS) ===
+NAME                        READY   STATUS    RESTARTS   AGE    IP            NODE                NOMINATED NODE   READINESS GATES
+frontend-5d65f5757c-hjh5m   1/1     Running   0          2s     10.244.2.15   lab-eval12-worker   <none>           <none>
+frontend-5d65f5757c-qj8h2   1/1     Running   0          132m   10.244.2.9    lab-eval12-worker   <none>           <none>
+frontend-5d65f5757c-rj5d4   1/1     Running   0          133m   10.244.2.2    lab-eval12-worker   <none>           <none>
+
+
+=== SCALE-DOWN (1 REPLICA) ===
+NAME                        READY   STATUS        RESTARTS   AGE    IP            NODE                NOMINATED NODE   READINESS GATES
+frontend-5d65f5757c-hjh5m   1/1     Terminating   0          6s     10.244.2.15   lab-eval12-worker   <none>           <none>
+frontend-5d65f5757c-qj8h2   1/1     Running       0          132m   10.244.2.9    lab-eval12-worker   <none>           <none>
+

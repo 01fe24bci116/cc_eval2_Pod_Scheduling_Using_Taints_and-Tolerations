@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recovery-demo
+  namespace: scheduling-lab
+  labels:
+    app: recovery-demo
+    experiment: declarative-recovery
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: recovery-demo
+  template:
+    metadata:
+      labels:
+        app: recovery-demo
+    spec:
+      nodeSelector:
+        role: microservices
+      containers:
+      - name: demo-web
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi

@@ -1,0 +1,82 @@
+﻿=== NODE LABELS ===
+NAME                       STATUS   ROLES           AGE   VERSION   LABELS
+lab-eval12-control-plane   Ready    control-plane   40s   v1.37.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-control-plane,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
+lab-eval12-worker          Ready    <none>          28s   v1.37.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-worker,kubernetes.io/os=linux,role=microservices
+lab-eval12-worker2         Ready    <none>          28s   v1.37.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=lab-eval12-worker2,kubernetes.io/os=linux,role=database
+
+
+=== DATABASE WORKER (lab-eval12-worker2) DETAILS ===
+Name:               lab-eval12-worker2
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=lab-eval12-worker2
+                    kubernetes.io/os=linux
+                    role=database
+Annotations:        node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sun, 15 Nov 2026 21:23:38 +0530
+Taints:             dedicated=database:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  lab-eval12-worker2
+  AcquireTime:     <unset>
+  RenewTime:       Sun, 15 Nov 2026 21:23:58 +0530
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Sun, 15 Nov 2026 21:23:50 +0530   Sun, 15 Nov 2026 21:23:38 +0530   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Sun, 15 Nov 2026 21:23:50 +0530   Sun, 15 Nov 2026 21:23:38 +0530   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Sun, 15 Nov 2026 21:23:50 +0530   Sun, 15 Nov 2026 21:23:38 +0530   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Sun, 15 Nov 2026 21:23:50 +0530   Sun, 15 Nov 2026 21:23:50 +0530   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  172.20.0.2
+  Hostname:    lab-eval12-worker2
+Capacity:
+  cpu:                16
+  ephemeral-storage:  1081101176832
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             7971004Ki
+  pods:               110
+Allocatable:
+  cpu:                16
+  ephemeral-storage:  1081101176832
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             7971004Ki
+  pods:               110
+System Info:
+  Machine ID:                 1e75a4e46cd349d0a0019cc95c713f38
+  System UUID:                1e75a4e46cd349d0a0019cc95c713f38
+  Boot ID:                    73a7e4b6-e121-4d24-97a4-a0f6ac4a52b0
+  Kernel Version:             6.6.87.2-microsoft-standard-WSL2
+  OS Image:                   Debian GNU/Linux 13 (trixie)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.3.4
+  Kubelet Version:            v1.37.0
+PodCIDR:                      10.244.1.0/24
+PodCIDRs:                     10.244.1.0/24
+ProviderID:                   kind://docker/lab-eval12/lab-eval12-worker2
+Non-terminated Pods:          (2 in total)
+  Namespace                   Name                CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                ------------  ----------  ---------------  -------------  ---
+  kube-system                 kindnet-w48x2       100m (0%)     0 (0%)      50Mi (0%)        0 (0%)         28s
+  kube-system                 kube-proxy-w8qtn    0 (0%)        0 (0%)      0 (0%)           0 (0%)         28s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                100m (0%)  0 (0%)
+  memory             50Mi (0%)  0 (0%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+Events:
+  Type    Reason          Age   From             Message
+  ----    ------          ----  ----             -------
+  Normal  RegisteredNode  27s   node-controller  Node lab-eval12-worker2 event: Registered Node lab-eval12-worker2 in Controller
+  Normal  NodeReady       16s   kubelet          Node lab-eval12-worker2 status is now: NodeReady
+

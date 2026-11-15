@@ -1,0 +1,28 @@
+﻿=== STATE 1: DEPLOYMENT RUNNING ===
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR
+recovery-demo   2/2     2            2           1s    demo-web     nginx:alpine   app=recovery-demo
+
+NAME                             READY   STATUS    RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+recovery-demo-84dc78bf58-t5z2z   1/1     Running   0          1s    10.244.2.12   lab-eval12-worker   <none>           <none>
+recovery-demo-84dc78bf58-xwhwc   1/1     Running   0          1s    10.244.2.11   lab-eval12-worker   <none>           <none>
+
+
+=== STATE 2: DEPLOYMENT DELETED ===
+kubectl.exe : Error from server (NotFound): deployments.apps "recovery-demo" not found
+At C:\Users\mahad\.gemini\antigravity\scratch\Cloud Computing Lab Evaluation 2\scripts\12-restore-deployment.ps1:30 
+char:11
++ $state2 = & kubectl get deployment recovery-demo -n scheduling-lab 2> ...
++           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Error from serv...demo" not found:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+
+=== STATE 3: DEPLOYMENT RESTORED ===
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR
+recovery-demo   2/2     2            2           1s    demo-web     nginx:alpine   app=recovery-demo
+
+NAME                             READY   STATUS    RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+recovery-demo-84dc78bf58-9jvk2   1/1     Running   0          1s    10.244.2.13   lab-eval12-worker   <none>           <none>
+recovery-demo-84dc78bf58-j7mm5   1/1     Running   0          1s    10.244.2.14   lab-eval12-worker   <none>           <none>
+

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container-restart-demo
+  namespace: scheduling-lab
+  labels:
+    experiment: container-restart-demo
+spec:
+  nodeSelector:
+    role: microservices
+  restartPolicy: Always
+  containers:
+  - name: crashing-container
+    image: busybox:latest
+    # Runs for 3 seconds then exits with non-zero code to trigger container restart
+    command: ["sh", "-c", "echo 'Container started. Exiting after 3s to demonstrate Kubelet auto-restart...'; sleep 3; exit 1"]
