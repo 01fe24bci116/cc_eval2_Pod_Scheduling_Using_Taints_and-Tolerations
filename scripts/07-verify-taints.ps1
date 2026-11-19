@@ -8,6 +8,7 @@
 #>
 
 $env:KUBECONFIG = "$HOME\.kube\config"
+& kubectl config use-context kind-lab-eval12 | Out-Null
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Split-Path -Parent $scriptDir
 $k8sDir = Join-Path $projectRoot "kubernetes\scheduling-lab"

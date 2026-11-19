@@ -4,6 +4,7 @@
 #>
 
 $env:KUBECONFIG = "$HOME\.kube\config"
+& kubectl config use-context kind-lab-eval12 | Out-Null
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Split-Path -Parent $scriptDir
 $manifestPath = Join-Path $projectRoot "kubernetes\recovery\recovery-demo.yaml"

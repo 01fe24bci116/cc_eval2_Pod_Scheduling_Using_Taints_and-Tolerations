@@ -4,6 +4,7 @@
 #>
 
 $env:KUBECONFIG = "$HOME\.kube\config"
+& kubectl config use-context kind-lab-eval12 | Out-Null
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Split-Path -Parent $scriptDir
 $evidenceDir = Join-Path $projectRoot "evidence\terminal-outputs"

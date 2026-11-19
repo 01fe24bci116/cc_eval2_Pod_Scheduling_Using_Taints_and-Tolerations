@@ -4,6 +4,8 @@
 #>
 
 $env:KUBECONFIG = "$HOME\.kube\config"
+# Ensure we are testing the correct cluster context for this lab
+& kubectl config use-context kind-lab-eval12 | Out-Null
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectRoot = Split-Path -Parent $scriptDir
 $reportDir = Join-Path $projectRoot "evidence\test-reports"
